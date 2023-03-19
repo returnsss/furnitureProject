@@ -9,128 +9,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>회원가입</title>
 <link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/member.css">
 
-<style>
-.formWrap {
-	max-width: 680px;
-	padding: 40px 60px 60px 100px;
-	margin: 25px auto;
-	background: #fff;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
-}
-
-h4 {
-	text-align: center;
-	padding-top: 300px;
-}
-
-.birth {
-	display: flex;
-}
-
-.birth p {
-	margin-right: 10px;
-}
-
-/* .phone, .phoneC, .zipcode {
-    	display: flex;
-    }*/
-.phone select {
-	margin-right: 10px;
-}
-
-.phone input {
-	margin-right: 10px;
-}
-
-.phoneC button {
-	margin-left: 10px;
-	width: 230px;
-}
-
-.zipcode button {
-	cursor: pointer;
-	width: 200px;
-	height: 35px;
-	margin-left: 10px;
-}
-
-.zipcodeWrap input {
-	margin-bottom: 7px;
-}
-
-.id button {
-	width: 235px;
-	margin-left: 10px;
-}
-</style>
 </head>
 
 <body>
 	<script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
-	<script>
-        function execDaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                    var fullAddr = ''; // 최종 주소 변수
-                    var extraAddr = ''; // 조합형 주소 변수
-
-                    // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                        fullAddr = data.roadAddress;
-                    }
-                    else { // 사용자가 지번 주소를 선택했을 경우(J)
-                        fullAddr = data.jibunAddress;
-                    }
-
-                    // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
-                    if(data.userSelectedType === 'R'){
-                        //법정동명이 있을 경우 추가한다.
-                        if(data.bname !== ''){
-                            extraAddr += data.bname;
-                        }
-                        // 건물명이 있을 경우 추가한다.
-                        if(data.buildingName !== ''){
-                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                        }
-                        // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
-                        fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
-                    }
-
-                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
-                    document.getElementById('address1').value = fullAddr;
-
-                    // 커서를 상세주소 필드로 이동한다.
-                    document.getElementById('address2').focus();
-                }
-            }).open();
-        }
-    </script>
-    <script type="text/javascript">
-		function checkForm() {
-			if (!document.newMember.id.value) {
-				alert("아이디를 입력하세요.");
-				return false;
-			}
-	
-			if (!document.newMember.password.value) {
-				alert("비밀번호를 입력하세요.");
-				return false;
-			}
-	
-			if (document.newMember.password.value != document.newMember.password_confirm.value) {
-				alert("비밀번호를 동일하게 입력하세요.");
-				return false;
-			}
-		}
-	</script>
+	<script type="text/javascript" src="../resources/js/searchAddress.js"></script>
+    <script type="text/javascript" src="../resources/js/memberValidation.js"></script>
 	<jsp:include page="../inc/header.jsp" />
 	<h4>회원가입</h4>
 	<form class="formWrap" action="processAddMember.jsp"
@@ -139,8 +25,17 @@ h4 {
 			<label for="id" class="col-sm-3 col-form-label">아이디</label>
 			<div class="col-sm-7 d-flex id">
 				<input type="text" class="form-control" id="id" name="id" placeholder="id"> 
-				<span class="idCheck"></span>
-				<input type="button" class="btn btn-primary btn-sm" name="btnIsDuplication" value="아이디 중복 확인">
+				
+				<input type="button" class="btn btn-primary btn-sm"
+				id="idCheckButton" name="btnIsDuplication" value="아이디 중복 확인">
+				
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<label for="" class="col-sm-3 col-form-label"></label>
+			<div class="col-sm-5">
+				<span class="idCheck" class="form-control"></span>
 			</div>
 		</div>
 		
@@ -153,10 +48,24 @@ h4 {
 		</div>
 		
 		<div class="row mb-3">
+			<label for="" class="col-sm-3 col-form-label"></label>
+			<div class="col-sm-5">
+				<span>※비밀번호는 영문자+숫자+특수문자 조합으로 8~25자리 사용해야 합니다.</span>
+			</div>
+		</div>
+		
+		<div class="row mb-3">
 			<label for="password_confirm" class="col-sm-3 col-form-label">비밀번호 확인</label>
 			<div class="col-sm-5">
 				<input type="password" class="form-control" id="passwordC"
 					name="password_confirm" placeholder="password confirm">
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<label for="" class="col-sm-3 col-form-label"></label>
+			<div class="col-sm-5">
+				<span class="pwCheck" class="form-control"></span>
 			</div>
 		</div>
 		
@@ -230,7 +139,7 @@ h4 {
 			<label for="phone" class="col-sm-3 col-form-label">휴대폰 번호</label>
 			<div class="col-sm-7 phone d-flex">
 				<select class="form-select" aria-label="Default select example"
-					name="phone1">
+					id="phone1" name="phone1">
 					<option value="010">010</option>
 					<option value="011">011</option>
 					<option value="016">016</option>
@@ -245,12 +154,22 @@ h4 {
 		<div class="row mb-3">
 			<label for="phoneC" class="col-sm-3 col-form-label">휴대폰 인증</label>
 			<div class="col-sm-7 phoneC d-flex">
-				<input type="text" class="form-control" id="phoneC" name="phoneC"
+				<input type="text" class="form-control randomNum" id="phoneC" name="phoneC"
 					placeholder="인증번호 입력">
-				<button type="button" class="btn btn-primary btn-sm">인증번호 받기</button>
+				<button type="button" class="btn btn-primary btn-sm randomNumBtn">인증번호 받기</button>
 			</div>
 		</div>
 
+
+		<script type="text/javascript">
+			const randomNum = document.querySelector('.randomNum');
+		    const randomNumBtn = document.querySelector('.randomNumBtn');
+		    
+		    randomNumBtn.addEventListener('click', function(){
+		        console.log(Math.floor(Math.random() * 1000000));
+		        randomNum.value = Math.floor(Math.random() * 1000000)
+		    })
+		</script>
 
 
 		<br>
@@ -298,12 +217,12 @@ h4 {
 					<div class="col-sm-5">
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="radio" name="termsYN"
-								id="termsY" value="yes" checked> <label
+								id="termsY" value="yes"> <label
 								class="form-check-label" for="termsY"> 동의 </label>
 						</div>
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="radio" name="termsYN"
-								id="termsN" value="no"> <label
+								id="termsN" value="no" checked> <label
 								class="form-check-label" for="termsN"> 동의 안함 </label>
 						</div>
 					</div>
@@ -317,6 +236,9 @@ h4 {
 		</div>
 
 	</form>
+	
+	
+	
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			// const inputID = document.querySelector('input[name=id]');
@@ -335,7 +257,46 @@ h4 {
 				// 아이디 중복 확인을 위해 팝업을 띄움.
 				window.open('popupIdCheck.jsp?id=' + id, 'IdCheck', 'width = 500, height = 500, top = 100, left = 200, location = no');
 			});
+			
+			
+			
+			// 2. ajax를 이용한 실시간 ID 중복 확인
+			const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
+			
+			const inputId = document.querySelector('input[name=id]');
+			inputId.addEventListener('keyup', function(){
+				const id = frmMemberInsert.id.value; // 아이디 input에 있는 값.
+				const idCheck = document.querySelector('.idCheck'); // 결과 문자열이 표현될 영역
+				xhr.open('GET', 'ajaxIdCheck.jsp?id=' + id); // HTTP 요청 초기화. 통신 방식과 url 설정.
+				xhr.send(); // url에 요청을 보냄.
+				
+				// 이벤트 등록. XMLHttpRequest 객체의 readyState 프로퍼티 값이 변할때마다 자동으로 호출
+				xhr.onreadystatechange = () => {
+					// readyState 프로퍼티의 값이 DONE : 요청한 데이터의 처리가 완료되어 응답할 준비가 완료됨.
+					if( xhr.readyState !== XMLHttpRequest.DONE) return;
+				
+					if(xhr.status === 200){ // 서버 (url)에 문서가 존재함
+						const json = JSON.parse(xhr.response);
+						if(json.result === 'true'){
+							idCheck.style.color = 'red';
+							idCheck.innerHTML = '동일한 아이디가 있습니다.';
+						}
+						else{
+							idCheck.style.color = 'gray';
+							idCheck.innerHTML = '동일한 아이디가 없습니다.';
+						}
+					}
+					else{ // 서버 (url)에 문서가 존재하지 않음.
+						console.error('Error', xhr.status, xhr.statusText);
+					}
+				}
+			})
+			
+			
+			
 		});
 	</script>
+	
+	
 </body>
 </html>

@@ -19,9 +19,10 @@
 	String mail1 = request.getParameter("mail1");
 	String mail2 = request.getParameterValues("mail2")[0];
 	String mail = mail1 + "@" + mail2;
+	String zipcode = request.getParameter("zipcode");
 	String address1 = request.getParameter("address1");
 	String address2 = request.getParameter("address2");
-	String address = address1 + address2; 
+	String address = zipcode + "/" + address1 + "/" + address2; 
 	String phone1 = request.getParameterValues("phone1")[0];
 	String phone2 = request.getParameter("phone2");
 	String phone3 = request.getParameter("phone3");
@@ -38,7 +39,7 @@
 		user="root" password="2714"/>
 
 <sql:update dataSource="${dataSource }" var="resultSet">
-	INSERT INTO member VALUES (?,?,?,?,?,?,?,?,?,?,?,now())
+	INSERT INTO member VALUES (?,?,?,?,?,?,?,?,?,?,?,now(),0)
 	<sql:param value="<%=id %>" />
 	<sql:param value="<%=password %>" />
 	<sql:param value="<%=name %>" />
@@ -50,6 +51,7 @@
 	<sql:param value="<%=receive_mail %>" />
 	<sql:param value="<%=receive_phone %>" />
 	<sql:param value="<%=agreement %>" />
+	
 	
 </sql:update>
 

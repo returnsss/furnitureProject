@@ -5,62 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-.formWrap {
-	max-width: 680px;
-	padding: 40px 60px 60px 100px;
-	margin: 25px auto;
-	background: #fff;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
-}
+<link rel="stylesheet" href="../resources/css/member.css">
 
-h4 {
-	text-align: center;
-	padding-top: 300px;
-}
-
-.birth {
-	display: flex;
-}
-
-.birth p {
-	margin-right: 10px;
-}
-
-/* .phone, .phoneC, .zipcode {
-    	display: flex;
-    }*/
-.phone select {
-	margin-right: 10px;
-}
-
-.phone input {
-	margin-right: 10px;
-}
-
-.phoneC button {
-	margin-left: 10px;
-	width: 230px;
-}
-
-.zipcode button {
-	cursor: pointer;
-	width: 200px;
-	height: 35px;
-	margin-left: 10px;
-}
-
-.zipcodeWrap input {
-	margin-bottom: 7px;
-}
-
-.id button {
-	width: 235px;
-	margin-left: 10px;
-}
-</style>
 <link rel="stylesheet" href="../resources/css/bootstrap.min.css">
 <%
 	String sessionId = (String) session.getAttribute("sessionId");
@@ -72,11 +18,15 @@ h4 {
 
 <sql:query dataSource="${dataSource }" var="resultSet">
 	SELECT * FROM MEMBER WHERE ID=?
-	<sql:param value="<%=sessionId %>" />	
+	<sql:param value="<%=sessionId %>" />
 </sql:query>
 <meta charset="UTF-8">
 	<title>회원 정보 수정</title>
 </head>
+<script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
+<script type="text/javascript" src="../resources/js/searchAddress.js"></script>
+<script type="text/javascript" src="../resources/js/memberValidation.js"></script>
+    
 <body onload="init()">
 	<jsp:include page="../inc/header.jsp" />
 	
@@ -90,9 +40,19 @@ h4 {
 		<c:set var="month" value="${birth.split('/')[1] }" />
 		<c:set var="day" value="${birth.split('/')[2] }" />
 		
+		<c:set var="address" value="${row.address }" />
+		<c:set var="zipcode" value="${address.split('/')[0] }" />
+		<c:set var="address1" value="${address.split('/')[1] }" />
+		<c:set var="address2" value="${address.split('/')[2] }" />
+		
+		<c:set var="phone" value="${row.phone }" />
+		<c:set var="phone1" value="${phone.split('-')[0] }" />
+		<c:set var="phone2" value="${phone.split('-')[1] }" />
+		<c:set var="phone3" value="${phone.split('-')[2] }" />
+		
 	<h4>회원 수정</h4>
 	<form class="formWrap" action="processUpdateMember.jsp"
-		name="newMember" method="post" onsubmit="return checkForm()">
+		name="frmMemberInsert" method="post" onsubmit="return checkForm()">
 		<div class="row mb-3">
 			<label for="id" class="col-sm-3 col-form-label">아이디</label>
 			<div class="col-sm-7 d-flex id">
@@ -150,6 +110,7 @@ h4 {
 		<div class="row mb-3">
 			<label class="col-sm-3 col-form-label">성별</label>
 			<div class="col-sm-5">
+				<c:set var="gender" value="${row.gender }" />
 				<input name="gender" type="radio" value="남" <c:if test="${gender.equals('남') }"> <c:out value="checked" /> </c:if> >남 
 				<input name="gender" type="radio" value="여" <c:if test="${gender.equals('여') }"> <c:out value="checked" /> </c:if> >여
 			</div>
@@ -173,13 +134,14 @@ h4 {
 			<label for="name" class="col-sm-3 col-form-label">주소</label>
 			<div class="col-sm-7 zipcodeWrap">
 				<div class="zipcode d-flex">
-					<input name="zipcode" id="zipcode" readonly class="form-control">
+					<input name="zipcode" id="zipcode" readonly class="form-control" value="${zipcode }">
 					<button type="button" class="btn btn-primary btn-sm"
 						onclick="execDaumPostcode();">우편번호 검색</button>
 				</div>
-				<input name="address1" id="address1" class="form-control" size="40"
+				<input name="address1" id="address1" class="form-control" size="40" value="${address1 }"
 					maxlength="40" readonly> 
-				<input name="address2" id="address2" class="form-control" size="40" maxlength="40">
+				<input name="address2" id="address2" class="form-control" size="40" maxlength="40"
+					value="${address2 }">
 			</div>
 		</div>
 
@@ -187,26 +149,37 @@ h4 {
 			<label for="phone" class="col-sm-3 col-form-label">휴대폰 번호</label>
 			<div class="col-sm-7 phone d-flex">
 				<select class="form-select" aria-label="Default select example"
-					name="phone1">
+					name="phone1" value="${phone1 }">
 					<option value="010">010</option>
 					<option value="011">011</option>
 					<option value="016">016</option>
 					<option value="017">017</option>
 					<option value="019">019</option>
 				</select> 
-				<input type="text" class="form-control" id="phone2" name="phone2" maxlength="4" size="4">
-				<input type="text" class="form-control" id="phone3" name="phone3" maxlength="4" size="4">
+				<input type="text" class="form-control" id="phone2" name="phone2" maxlength="4" size="4" value="${phone2 }">
+				<input type="text" class="form-control" id="phone3" name="phone3" maxlength="4" size="4" value="${phone3 }">
 			</div>
 		</div>
 		
 		<div class="row mb-3">
 			<label for="phoneC" class="col-sm-3 col-form-label">휴대폰 인증</label>
 			<div class="col-sm-7 phoneC d-flex">
-				<input type="text" class="form-control" id="phoneC" name="phoneC"
+				<input type="text" class="form-control randomNum" id="phoneC" name="phoneC"
 					placeholder="인증번호 입력">
-				<button type="button" class="btn btn-primary btn-sm">인증번호 받기</button>
+				<button type="button" class="btn btn-primary btn-sm randomNumBtn">인증번호 받기</button>
 			</div>
 		</div>
+		
+		
+		<script type="text/javascript">
+			const randomNum = document.querySelector('.randomNum');
+		    const randomNumBtn = document.querySelector('.randomNumBtn');
+		    
+		    randomNumBtn.addEventListener('click', function(){
+		        console.log(Math.floor(Math.random() * 1000000));
+		        randomNum.value = Math.floor(Math.random() * 1000000)
+		    })
+		</script>
 
 
 
@@ -270,7 +243,7 @@ h4 {
 		</div>
 		<div class="text-center">
 			<button type="reset" class="btn btn-primary">취소하기</button>
-			<button type="submit" class="btn btn-primary">가입하기</button>
+			<button type="submit" class="btn btn-primary">수정하기</button>
 		</div>
 
 	</form>
@@ -301,18 +274,18 @@ h4 {
 				}
 			}
 		}
-		
+		/* 
 		function checkForm() {
-			if (!document.newMember.password.value) {
+			if (!document.modiMember.password.value) {
 				alert("비밀번호를 입력하세요.");
 				return false;
 			}
 	
-			if (document.newMember.password.value != document.newMember.password_confirm.value) {
+			if (document.modiMember.password.value != document.modiMember.password_confirm.value) {
 				alert("비밀번호를 동일하게 입력하세요.");
 				return false;
 			}
-		}
+		} */
 	
 	</script>
 </body>
