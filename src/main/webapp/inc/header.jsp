@@ -30,15 +30,15 @@
 		<c:choose>
    			<c:when test="${empty sessionId }">
    				<div>
-	   				<a class="btn btn-outline-primary" href="<c:url value="../member/loginMember.jsp" />">로그인</a>
-	   				<a class="btn btn-primary" href="<c:url value="../member/addMember.jsp" />">회원가입</a>
+	   				<a class="btn btn-outline-primary" href="<c:url value="/LoginPage.lo" />">로그인</a>
+	   				<a class="btn btn-primary" href="<c:url value="/AddMemberPage.lo" />">회원가입</a>
    				</div>
    			</c:when>
    			<c:otherwise>
    				<div>
 	   				[<%=sessionId %>님]
-	   				<a class="btn btn-outline-primary" href="<c:url value="../member/logoutMember.jsp" />">로그아웃</a>
-	   				<a class="btn btn-primary" href="<c:url value="../member/updateMember.jsp" />">회원 수정</a>
+	   				<a class="btn btn-outline-primary" href="<c:url value="/Logout.lo" />">로그아웃</a>
+	   				<a class="btn btn-primary" href="<c:url value="/UpdateMemberPage.lo" />">회원 수정</a>
    				</div>
    			</c:otherwise>
    		</c:choose>

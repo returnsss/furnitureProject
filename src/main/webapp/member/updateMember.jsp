@@ -51,7 +51,7 @@
 		<c:set var="phone3" value="${phone.split('-')[2] }" />
 		
 	<h4>회원 수정</h4>
-	<form class="formWrap" action="processUpdateMember.jsp"
+	<form class="formWrap" action="UpdateMember.lo"
 		name="frmMemberInsert" method="post" onsubmit="return checkForm()">
 		<div class="row mb-3">
 			<label for="id" class="col-sm-3 col-form-label">아이디</label>
@@ -244,10 +244,57 @@
 		<div class="text-center">
 			<button type="reset" class="btn btn-primary">취소하기</button>
 			<button type="submit" class="btn btn-primary">수정하기</button>
+			<button type="button" onclick="withdrawal()" 
+			class="btn btn-primary withdrawal">탈퇴하기</button>
 		</div>
 
 	</form>
 	</c:forEach>
+	
+	<script>
+		function withdrawal(){
+	        const result = confirm("정말 탈퇴 하시겠습니까?");
+	
+	        if(result == true){
+	        	const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
+	    		
+	    		//const id = ;
+	    		console.log(id);
+	    		
+	    		xhr.open('GET', 'WithdrawalMember.lo'); // HTTP 요청 초기화. 통신 방식과 url 설정.
+	    		xhr.send(); // url에 요청을 보냄.
+	    		
+	    		// 이벤트 등록. XMLHttpRequest 객체의 readyState 프로퍼티 값이 변할때마다 자동으로 호출
+	    		xhr.onreadystatechange = () => {
+	    			// readyState 프로퍼티의 값이 DONE : 요청한 데이터의 처리가 완료되어 응답할 준비가 완료됨.
+	    			if( xhr.readyState !== XMLHttpRequest.DONE) return;
+	    		
+	    			/* if(xhr.status === 200){ // 서버 (url)에 문서가 존재함
+	    				const json = JSON.parse(xhr.response);
+	    				if(json.result === 'true'){
+	    					idCheck.style.color = 'red';
+	    					idCheck.innerHTML = '동일한 아이디가 있습니다.';
+	    				}
+	    				else{
+	    					idCheck.style.color = 'gray';
+	    					idCheck.innerHTML = '동일한 아이디가 없습니다.';
+	    				}
+	    			}
+	    			else{ // 서버 (url)에 문서가 존재하지 않음.
+	    				console.error('Error', xhr.status, xhr.statusText);
+	    			} */
+	    		}
+	            alert("탈퇴되었습니다.");
+	            window.location.href="http://localhost:8080/LoginPage.lo";
+	        }
+	        else{
+	            alert("취소되었습니다.");
+	        }
+	    }
+		
+		
+		
+	</script>
 	
 	<script type="text/javascript">
 		function init(){

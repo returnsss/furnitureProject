@@ -19,7 +19,7 @@
     <script type="text/javascript" src="../resources/js/memberValidation.js"></script>
 	<jsp:include page="../inc/header.jsp" />
 	<h4>회원가입</h4>
-	<form class="formWrap" action="processAddMember.jsp"
+	<form class="formWrap" action="/AddMember.lo"
 		name="frmMemberInsert" method="post" onsubmit="return checkForm()">
 		<div class="row mb-3">
 			<label for="id" class="col-sm-3 col-form-label">아이디</label>
@@ -35,7 +35,7 @@
 		<div class="row mb-3">
 			<label for="" class="col-sm-3 col-form-label"></label>
 			<div class="col-sm-5">
-				<span class="idCheck" class="form-control"></span>
+				<span class="idCheck" class="form-control">※아이디는 5자 이상 12자 이하로 작성해주세요.</span>
 			</div>
 		</div>
 		
@@ -261,13 +261,14 @@
 			
 			
 			// 2. ajax를 이용한 실시간 ID 중복 확인
-			const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
+			/* const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
 			
 			const inputId = document.querySelector('input[name=id]');
 			inputId.addEventListener('keyup', function(){
 				const id = frmMemberInsert.id.value; // 아이디 input에 있는 값.
+				console.log(id);
 				const idCheck = document.querySelector('.idCheck'); // 결과 문자열이 표현될 영역
-				xhr.open('GET', 'ajaxIdCheck.jsp?id=' + id); // HTTP 요청 초기화. 통신 방식과 url 설정.
+				xhr.open('GET', 'AjaxIdCheck.lo'); // HTTP 요청 초기화. 통신 방식과 url 설정.
 				xhr.send(); // url에 요청을 보냄.
 				
 				// 이벤트 등록. XMLHttpRequest 객체의 readyState 프로퍼티 값이 변할때마다 자동으로 호출
@@ -290,7 +291,7 @@
 						console.error('Error', xhr.status, xhr.statusText);
 					}
 				}
-			})
+			}) */
 			
 			
 			
