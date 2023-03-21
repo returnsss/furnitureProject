@@ -231,7 +231,8 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<button type="reset" class="btn btn-primary">취소하기</button>
+			<button type="button" onclick="goIndex()" 
+			class="btn btn-primary">취소하기</button>
 			<button type="submit" class="btn btn-primary">가입하기</button>
 		</div>
 
@@ -240,6 +241,13 @@
 	
 	
 	<script>
+	
+		function goIndex(){
+			window.location.href="http://localhost:8080/index.jsp";
+		}
+	
+	
+	
 		document.addEventListener("DOMContentLoaded", function(){
 			// const inputID = document.querySelector('input[name=id]');
 			const frmMemberInsert = document.frmMemberInsert; // 폼을 들고옴.
@@ -254,8 +262,33 @@
 					frmMemberInsert.id.focus();
 					return;
 				}
+				console.log(id);
+				const xhr = new XMLHttpRequest(); // XMLHttpRequest
+				xhr.open('GET', 'AjaxIdCheck.lo?id=' + id); // HTTP 요청 초기화. 통신 방식과 url 설정.
+				xhr.send(); // url에 요청을 보냄.
+				
+				// 이벤트 등록. XMLHttpRequest 객체의 readyState 프로퍼티 값이 변할때마다 자동으로 호출
+				xhr.onreadystatechange = () => {
+					// readyState 프로퍼티의 값이 DONE : 요청한 데이터의 처리가 완료되어 응답할 준비가 완료됨.
+					if( xhr.readyState !== XMLHttpRequest.DONE) return;
+				
+					if(xhr.status === 200){ // 서버 (url)에 문서가 존재함
+						const json = JSON.parse(xhr.response);
+						console.log(json);
+						if(json.result === 'true'){
+							alert('동일한 아이디가 있습니다.');
+						}
+						else{
+							alert('동일한 아이디가 없습니다.');
+						}
+					}
+					else{ // 서버 (url)에 문서가 존재하지 않음.
+						console.error('Error', xhr.status, xhr.statusText);
+					}
+				}
 				// 아이디 중복 확인을 위해 팝업을 띄움.
-				window.open('popupIdCheck.jsp?id=' + id, 'IdCheck', 'width = 500, height = 500, top = 100, left = 200, location = no');
+		
+				//window.open('AjaxIdCheck.lo?id=' + id, 'IdCheck', 'width = 500, height = 500, top = 100, left = 200, location = no');
 			});
 			
 			

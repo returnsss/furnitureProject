@@ -15,16 +15,35 @@
 		</div>
 	</div>
 	<div class="container" align="center">
-		<div class="col-md-4 col-md-offset-4">
+		<div class="col-md-4 col-md-offset-4 div2">
 			<h3 class="form-signin-heading">Please sign in</h3>
-			<%
+			<%-- <%
 				String error = request.getParameter("error");
 				if (error != null) {
 					out.println("<div class='alert alert-danger'>");
 					out.println("아이디와 비밀번호를 확인해 주세요");
 					out.println("</div>");
 				}
-			%>
+			%> --%>
+			
+			<script>
+				let div2 = document.querySelector('.div2');
+				let error = "${error}";
+				
+				if(error != ""){
+					let div = document.createElement('div');
+					div.classList.add('alert');
+					div.classList.add('alert-danger');
+					
+					let text = document.createTextNode('아이디와 비밀번호를 확인해 주세요.');
+					
+					div.appendChild(text);
+					
+					div2.appendChild(div);
+					
+				}
+			</script>
+			
 			<form class="form-signin" action="/Login.lo" method="post">
 				<div class="form-group">
 					<label for="inputUserName" class="sr-only">User Name</label> 

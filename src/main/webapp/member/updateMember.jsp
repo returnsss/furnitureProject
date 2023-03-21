@@ -242,7 +242,8 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<button type="reset" class="btn btn-primary">취소하기</button>
+			<button type="button" onclick="goIndex()" 
+			class="btn btn-primary">취소하기</button>
 			<button type="submit" class="btn btn-primary">수정하기</button>
 			<button type="button" onclick="withdrawal()" 
 			class="btn btn-primary withdrawal">탈퇴하기</button>
@@ -252,6 +253,12 @@
 	</c:forEach>
 	
 	<script>
+	
+		function goIndex(){
+			window.location.href="http://localhost:8080/index.jsp";
+		}
+	
+	
 		function withdrawal(){
 	        const result = confirm("정말 탈퇴 하시겠습니까?");
 	

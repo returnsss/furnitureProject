@@ -56,7 +56,7 @@ public class LoginController extends HttpServlet {
         	try {
         		int loginResult = requestLoginMember(req, resp);
 				if(loginResult == 0) { // state == 0 일반회원 로그인
-					rd = req.getRequestDispatcher("/member/processResultMember.jsp");
+					rd = req.getRequestDispatcher("/index.jsp");
 					// 합칠떄 인덱스로 가게 만들기
 				}
 				else if(loginResult == 1) { // state == 1 이용 제한 고객
@@ -70,6 +70,7 @@ public class LoginController extends HttpServlet {
 				}
 				else {
 					rd = req.getRequestDispatcher("/member/loginMember.jsp?error=1");
+					rd.forward(req, resp);
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -90,8 +91,10 @@ public class LoginController extends HttpServlet {
             
         }
         else if(command.contains("AjaxIdCheck.lo")) { // 회원 아이디 중복 확인
-        	idCheck(req, resp);
-        	RequestDispatcher rd = req.getRequestDispatcher("/member/ajaxIdCheck.jsp");
+        	//idCheck(req, resp);
+        	String result = idCheck(req, resp);
+        	req.setAttribute("result", result);
+        	RequestDispatcher rd = req.getRequestDispatcher("/member/popupIdCheck.jsp");
             rd.forward(req, resp);
         }
         else if(command.contains("UpdateMemberPage.lo")) { // 회원 수정으로 이동
@@ -238,17 +241,19 @@ public class LoginController extends HttpServlet {
         }
 	}
 
-	private boolean idCheck(HttpServletRequest req, HttpServletResponse resp) {
+	private String idCheck(HttpServletRequest req, HttpServletResponse resp) {
 		
 		Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         int rowCount = 0;
+        String result = "true";
 		
         String id = req.getParameter("id");
         
 		try {
             String sql = "SELECT COUNT(*) AS cnt FROM member WHERE id=?";
+
             conn = DBConnection.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, id);
@@ -257,11 +262,8 @@ public class LoginController extends HttpServlet {
 				rowCount = rs.getInt(1);
 			}
 			if(rowCount == 0) {
-				return false;
+				result = "false";
 				
-			}
-			else {
-				return true;
 			}
             
             
@@ -278,7 +280,7 @@ public class LoginController extends HttpServlet {
             throw new RuntimeException(ex.getMessage());
         }
     }
-		return false;
+		return result;
 		
 	}
 
@@ -391,6 +393,8 @@ public class LoginController extends HttpServlet {
 			else{
 				//resp.sendRedirect("loginMember.jsp?error=1");
 				result = 4;
+				req.setAttribute("error", 1);
+				
 				return result;
 			}
 		} catch (SQLException e) {

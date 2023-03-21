@@ -161,43 +161,30 @@ public class MemberDAO {
         return null;
     }
     
-    public boolean requestLoginMember(HttpServletRequest req, HttpServletResponse resp) throws IOException, ClassNotFoundException{
-		
-		
-		Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        HttpSession session = req.getSession();
-		
-		String id = req.getParameter("id");
-		String password = req.getParameter("password");
-		String sql = "SELECT * FROM member WHERE id = ? AND password = ?";
-		
-		try {
-			conn = DBConnection.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, password);
-			rs = pstmt.executeQuery();
-			if(rs.next()){
-				session.setAttribute("sessionId", id);
-				session.setAttribute("sessionMemberName", rs.getString("name"));
-				
-				//CartDAO cartDAO = new CartDAO();
-				//cartDAO.updateCartBylogin(session);
-				
-				//resp.sendRedirect("resultMember.jsp?msg=2");
-				return true;
-			}
-			else{
-				//resp.sendRedirect("loginMember.jsp?error=1");
-				return false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-}
+	/*
+	 * public boolean requestLoginMember(HttpServletRequest req, HttpServletResponse
+	 * resp) throws IOException, ClassNotFoundException{
+	 * 
+	 * 
+	 * Connection conn = null; PreparedStatement pstmt = null; ResultSet rs = null;
+	 * HttpSession session = req.getSession();
+	 * 
+	 * String id = req.getParameter("id"); String password =
+	 * req.getParameter("password"); String sql =
+	 * "SELECT * FROM member WHERE id = ? AND password = ?";
+	 * 
+	 * try { conn = DBConnection.getConnection(); pstmt =
+	 * conn.prepareStatement(sql); pstmt.setString(1, id); pstmt.setString(2,
+	 * password); rs = pstmt.executeQuery(); if(rs.next()){
+	 * session.setAttribute("sessionId", id);
+	 * session.setAttribute("sessionMemberName", rs.getString("name"));
+	 * 
+	 * //CartDAO cartDAO = new CartDAO(); //cartDAO.updateCartBylogin(session);
+	 * 
+	 * //resp.sendRedirect("resultMember.jsp?msg=2"); return true; } else{
+	 * //resp.sendRedirect("loginMember.jsp?error=1"); return false; } } catch
+	 * (SQLException e) { e.printStackTrace(); } return false; }
+	 */
     
     
     
